@@ -6,7 +6,7 @@ import java.math.BigDecimal
 import java.time.LocalDate
 import java.util.*
 @Entity
-@Table(name="tb_custumer")
+@Table(name="tb_credit")
 data class Credit(
         @Column(nullable = false, unique = true)
         val creditCode: UUID = UUID.randomUUID(),
