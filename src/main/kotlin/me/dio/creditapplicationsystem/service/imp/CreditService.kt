@@ -9,8 +9,10 @@ import java.util.*
 
 @Service
 class CreditService(
-    private val creditRepo: CreditRepositorie
+
+    private val creditRepo: CreditRepositorie,
     private val custumerService: CustumerService
+
 ) : ICreditSrevice {
     override fun save(credit: Credit): Credit {
         credit.apply {
@@ -21,7 +23,7 @@ class CreditService(
     }
 
     override fun findAllByCustumer(custumerId: Long): List<Credit> {
-
+    return this.creditRepo.findAllByCustumer(custumerId)
     }
 
     override fun findByCreditCode(custumerId: Long, creditCode: UUID): Credit {
