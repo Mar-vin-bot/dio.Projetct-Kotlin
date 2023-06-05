@@ -6,7 +6,7 @@ plugins {
 	id 'org.jetbrains.kotlin.jvm' version '1.7.22'
 	id 'org.jetbrains.kotlin.plugin.spring' version '1.7.22'
 	id 'org.jetbrains.kotlin.plugin.jpa' version '1.7.22'
-    id 'org.jetbrains.kotlin.jvm' version '1.9.0-Beta'
+	//id 'org.jetbrains.kotlin.jvm' version '1.9.0-Beta'
 }
 
 group = 'me.dio'
@@ -41,5 +41,5 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 kotlin {
-    jvmToolchain(11)
+    jvmToolchain(17)
 }

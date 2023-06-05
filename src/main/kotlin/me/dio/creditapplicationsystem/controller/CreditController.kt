@@ -36,8 +36,9 @@ class CreditController(
             .stream().map{credit: Credit -> CreditViewList(credit)}.collect(Collectors.toList())
     }
 
-    @GetMapping("/{id}")
-    fun findByCreditCode(custumerId: Long, @PathVariable creditCode: UUID): CreditView {
+    @GetMapping("/{creditCode}")
+    fun findByCreditCode(@RequestParam(value = "custumerId")
+                         custumerId: Long, @PathVariable creditCode: UUID): CreditView {
     val credit : Credit = this.creditService.findByCreditCode(custumerId, creditCode)
     return CreditView(credit)
     }
