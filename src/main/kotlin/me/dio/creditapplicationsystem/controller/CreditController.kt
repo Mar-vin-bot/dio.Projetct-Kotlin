@@ -1,9 +1,11 @@
 package me.dio.creditapplicationsystem.controller
 
 import me.dio.creditapplicationsystem.controller.dto.CreditDto
+import me.dio.creditapplicationsystem.controller.dto.CreditView
 import me.dio.creditapplicationsystem.controller.dto.CreditViewList
 import me.dio.creditapplicationsystem.entities.Credit
 import me.dio.creditapplicationsystem.service.imp.CreditService
+import org.aspectj.apache.bcel.classfile.Code
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import java.util.*
 import java.util.stream.Collectors
 
 @RestController
@@ -31,5 +34,11 @@ class CreditController(
                           custumerId: Long) : List<CreditViewList>{
         return this.creditService.findAllByCustumer(custumerId)
             .stream().map{credit: Credit -> CreditViewList(credit)}.collect(Collectors.toList())
+    }
+
+    @GetMapping("/{id}")
+    fun findByCreditCode(custumerId: Long, @PathVariable creditCode: UUID): CreditView {
+    val credit : Credit = this.creditService.findByCreditCode(custumerId, creditCode)
+    return CreditView(credit)
     }
 }
