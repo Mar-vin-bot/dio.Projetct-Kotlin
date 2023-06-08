@@ -1,5 +1,6 @@
 package me.dio.creditapplicationsystem.controller
 
+import jakarta.validation.Valid
 import me.dio.creditapplicationsystem.controller.dto.CustumerDto
 import me.dio.creditapplicationsystem.controller.dto.CustumerUpdateDto
 import me.dio.creditapplicationsystem.controller.dto.CustumerView
@@ -16,7 +17,7 @@ class CustumerController(
 ) {
 
     @PostMapping
-    fun saveCustumer(@RequestBody custumerDto: CustumerDto): ResponseEntity<String> {
+    fun saveCustumer(@RequestBody @Valid custumerDto: CustumerDto): ResponseEntity<String> {
         val savedCustumer = this.custumerService.save(custumerDto.toEntity());
         return ResponseEntity.status(HttpStatus.CREATED)
             .body("Custumer ${savedCustumer.email} saved!")
@@ -34,7 +35,7 @@ class CustumerController(
     @PatchMapping
     fun updateCustumer(
         @RequestParam(value = "custumerId") id: Long,
-        @RequestBody custumerUpdateDto: CustumerUpdateDto
+        @RequestBody @Valid custumerUpdateDto: CustumerUpdateDto
     ): ResponseEntity<CustumerView> {
         val custumer = this.custumerService.findById(id)
         val custumerToUpdate: Custumer = custumerUpdateDto.toEntity(custumer)
