@@ -30,6 +30,7 @@ class CustumerController(
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteCustumer(@PathVariable id: Long) = this.custumerService.delete(id)
 
     @PatchMapping

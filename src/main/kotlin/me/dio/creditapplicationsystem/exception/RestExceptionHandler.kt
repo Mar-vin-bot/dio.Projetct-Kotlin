@@ -9,7 +9,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import java.time.LocalDate
-import java.util.Objects
 
 //calsse define tratamento de exceções, fica escutando o controller
 @RestControllerAdvice
@@ -23,17 +22,18 @@ class RestExceptionHandler {
             val mgnErro: String? = erro.defaultMessage
             erros[fildName] = mgnErro
         }
-            return ResponseEntity(
-                ExceptionDetails(
-                    title = "Bad Request Consult the documentation",
-                    timestamp = LocalDate.now(),
-                    status = HttpStatus.BAD_REQUEST.value(),
-                    exception = ex.javaClass.toString(),
-                    details = erros
-                ), HttpStatus.BAD_REQUEST
-            )
+        return ResponseEntity(
+            ExceptionDetails(
+                title = "Bad Request Consult the documentation",
+                timestamp = LocalDate.now(),
+                status = HttpStatus.BAD_REQUEST.value(),
+                exception = ex.javaClass.toString(),
+                details = erros
+            ), HttpStatus.BAD_REQUEST
+        )
 
-        }
+    }
+
     @ExceptionHandler(DataAccessException::class)
     fun handlerValidExecption(ex: DataAccessException): ResponseEntity<ExceptionDetails> {
         return ResponseEntity(
@@ -48,4 +48,32 @@ class RestExceptionHandler {
 
     }
 
+    @ExceptionHandler(BusinesException::class)
+    fun handlerValidExecption(ex: BusinesException): ResponseEntity<ExceptionDetails> {
+        return ResponseEntity(
+            ExceptionDetails(
+                title = "Bad Request Consult the documentation",
+                timestamp = LocalDate.now(),
+                status = HttpStatus.BAD_REQUEST.value(),
+                exception = ex.javaClass.toString(),
+                details = mutableMapOf(ex.cause.toString() to ex.message)
+            ), HttpStatus.BAD_REQUEST
+        )
+
     }
+
+    @ExceptionHandler(IllegalArgumentException::class)
+    fun handlerValidExecption(ex: IllegalArgumentException): ResponseEntity<ExceptionDetails> {
+        return ResponseEntity(
+            ExceptionDetails(
+                title = "Bad Request Consult the documentation",
+                timestamp = LocalDate.now(),
+                status = HttpStatus.BAD_REQUEST.value(),
+                exception = ex.javaClass.toString(),
+                details = mutableMapOf(ex.cause.toString() to ex.message)
+            ), HttpStatus.BAD_REQUEST
+        )
+
+    }
+
+}
