@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.test.context.ActiveProfiles
 import java.math.BigDecimal
+import java.util.*
 
 @ActiveProfiles("teste")
 @ExtendWith(MockKExtension::class)
@@ -35,6 +36,22 @@ class CustumerServiceTest {
         Assertions.assertThat(actual).isNotNull
         Assertions.assertThat(actual).isSameAs(fakeCustumer)
         verify(exactly = 1) { custumerRepositorie.save(fakeCustumer) }
+    }
+
+    @Test
+    fun should_findById(){
+        //give
+        val fakeId: Long = Random().nextLong()
+        val fakeCustumer = buildCustumer(id = fakeId)
+        every { custumerRepositorie.findById(fakeId) } returns Optional.of(fakeCustumer)
+
+        //when
+        val actualy: Custumer = custumerService.findById(fakeId)
+        //then
+        Assertions.assertThat(actualy).isNotNull
+        Assertions.assertThat(actualy).isExactlyInstanceOf(Custumer:: class.java)
+        Assertions.assertThat(actualy).isSameAs(fakeCustumer)
+        verify(exactly = 1) { custumerRepositorie.findById(fakeId) }
     }
 
 
