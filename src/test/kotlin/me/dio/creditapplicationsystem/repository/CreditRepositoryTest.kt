@@ -53,6 +53,18 @@ class CreditRepositoryTest {
         Assertions.assertThat(fakeCredit2).isSameAs(credit2)
     }
 
+    @Test
+    fun should_findAllCredits_by_custumerId(){
+        //give
+        val custumerId: Long = 1L
+        //when
+        val creditList: List<Credit> = creditRepositorie.findAllByCustumer(custumerId)
+        //then
+        Assertions.assertThat(creditList).isNotEmpty
+        Assertions.assertThat(creditList.size).isEqualTo(2)
+        Assertions.assertThat(creditList).contains(credit1, credit2)
+    }
+
 
 
 
