@@ -7,6 +7,7 @@ import io.mockk.junit5.MockKExtension
 import io.mockk.verify
 import me.dio.creditapplicationsystem.entities.Address
 import me.dio.creditapplicationsystem.entities.Custumer
+import me.dio.creditapplicationsystem.exception.BusinesException
 import me.dio.creditapplicationsystem.repositories.CustumerRepositorie
 import me.dio.creditapplicationsystem.service.imp.CustumerService
 import org.assertj.core.api.Assertions
@@ -52,6 +53,19 @@ class CustumerServiceTest {
         Assertions.assertThat(actualy).isExactlyInstanceOf(Custumer:: class.java)
         Assertions.assertThat(actualy).isSameAs(fakeCustumer)
         verify(exactly = 1) { custumerRepositorie.findById(fakeId) }
+    }
+
+    @Test
+    fun should_notFindBy_andThrowException_BusinesException(){
+        //give
+        val fakeId: Long = Random().nextLong()
+        every { custumerRepositorie.findById(fakeId) } returns Optional.empty()
+
+        //when
+        //then
+        Assertions.assertThatExceptionOfType(BusinesException:: class.java)
+            .isThrownBy { custumerService.findById(fakeId) }
+            .withMessage("id $fakeId not found")
     }
 
 
