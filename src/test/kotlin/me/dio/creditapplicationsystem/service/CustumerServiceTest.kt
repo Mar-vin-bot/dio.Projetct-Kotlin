@@ -4,6 +4,8 @@ import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
+import io.mockk.just
+import io.mockk.runs
 import io.mockk.verify
 import me.dio.creditapplicationsystem.entities.Address
 import me.dio.creditapplicationsystem.entities.Custumer
@@ -66,6 +68,20 @@ class CustumerServiceTest {
         Assertions.assertThatExceptionOfType(BusinesException:: class.java)
             .isThrownBy { custumerService.findById(fakeId) }
             .withMessage("id $fakeId not found")
+    }
+
+    @Test
+    fun should_delet_a_custumer(){
+        //give
+        val fakeId: Long = Random().nextLong()
+        val fakeCustumer = buildCustumer(id = fakeId)
+        every { custumerRepositorie.findById(fakeId) } returns Optional.of(fakeCustumer)
+        every { custumerRepositorie.delete(fakeCustumer) } just runs
+        //when
+        custumerService.delete(fakeId)
+        //then
+        verify(exactly = 1) { custumerRepositorie.findById(fakeId) }
+        verify(exactly = 1) { custumerRepositorie.delete(fakeCustumer) }
     }
 
 

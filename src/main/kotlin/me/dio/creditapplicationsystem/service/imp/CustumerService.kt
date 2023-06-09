@@ -5,7 +5,6 @@ import me.dio.creditapplicationsystem.exception.BusinesException
 import me.dio.creditapplicationsystem.repositories.CustumerRepositorie
 import me.dio.creditapplicationsystem.service.ICustumerService
 import org.springframework.stereotype.Service
-import java.lang.RuntimeException
 
 @Service
 class CustumerService(
@@ -22,8 +21,7 @@ class CustumerService(
 
 
     override fun delete(id: Long) {
-     val custumer  = this.findById(id)
-        this.custumerRepo.delete(custumer)
-        this.custumerRepo.deleteById(id)
+        val customer: Custumer = this.findById(id)
+        this.custumerRepo.delete(customer)
     }
 }
