@@ -2,6 +2,7 @@ package me.dio.creditapplicationsystem.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import me.dio.creditapplicationsystem.controller.dto.CustumerDto
+import me.dio.creditapplicationsystem.entities.Custumer
 import me.dio.creditapplicationsystem.repositories.CustumerRepositorie
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -25,8 +26,10 @@ import java.math.BigDecimal
 class CustumerControlerTest {
     @Autowired
     private lateinit var custumerRepositorie: CustumerRepositorie
+
     @Autowired
     private lateinit var mockMvc: MockMvc
+
     @Autowired
     private lateinit var objectMapper: ObjectMapper
 
@@ -36,6 +39,7 @@ class CustumerControlerTest {
 
     @BeforeEach
     fun setup() = custumerRepositorie.deleteAll()
+
     @AfterEach
     fun tearDown() = custumerRepositorie.deleteAll()
 
@@ -69,7 +73,6 @@ class CustumerControlerTest {
         )
             .andExpect(MockMvcResultMatchers.status().isConflict)
             .andDo(MockMvcResultHandlers.print())
-
     }
 
     @Test
@@ -93,6 +96,55 @@ class CustumerControlerTest {
                     .value("class org.springframework.web.bind.MethodArgumentNotValidException")
             )
             .andExpect(MockMvcResultMatchers.jsonPath("$.details[*]").isNotEmpty)
+            .andDo(MockMvcResultHandlers.print())
+    }
+
+    @Test
+    fun should_findCustumerById_andReturn_200() {
+        //give
+        val custumer: Custumer = custumerRepositorie.save(builderCustumerDto().toEntity())
+        //when
+        mockMvc.perform(
+            MockMvcRequestBuilders.get("$URL/${custumer.id}")
+                .accept(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andDo(MockMvcResultHandlers.print())
+    }
+
+    @Test
+    fun should_notFindCustumer_when_invalidId_return_400() {
+        //given
+        val invalidId: Long = 2L;
+        //when
+        mockMvc.perform(
+            MockMvcRequestBuilders.get("$URL/$invalidId.id")
+                .accept(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+    }
+
+    @Test
+    fun should_deleteCustumerById_return204(){
+        val custumer: Custumer = custumerRepositorie.save(builderCustumerDto().toEntity())
+        //when
+        mockMvc.perform(
+            MockMvcRequestBuilders.delete("$URL/${custumer.id}")
+                .accept(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(MockMvcResultMatchers.status().isNoContent)
+            .andDo(MockMvcResultHandlers.print())
+    }
+
+    @Test
+    fun should_deleteCustumerById_retun400(){
+        val invalidId: Long = 2L;
+        //when
+        mockMvc.perform(
+            MockMvcRequestBuilders.delete("$URL/$invalidId.id")
+                .accept(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
             .andDo(MockMvcResultHandlers.print())
     }
 
