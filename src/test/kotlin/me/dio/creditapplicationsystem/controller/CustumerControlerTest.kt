@@ -149,6 +149,8 @@ class CustumerControlerTest {
             .andDo(MockMvcResultHandlers.print())
     }
 
+
+
     @Test
     fun should_updateCustumer_andReturn200(){
         //give
@@ -162,6 +164,22 @@ class CustumerControlerTest {
                 .content(custumerDto_toString)
         )
             .andExpect(MockMvcResultMatchers.status().isOk)
+            .andDo(MockMvcResultHandlers.print())
+    }
+
+    @Test
+    fun should_updateCustumer_withInvalidID_andReturn400(){
+        //give
+        val invalidId: Long = 2L;
+        val custumerUpdateDto: CustumerUpdateDto = builderCustumerUpdateDto()
+        val custumerDto_toString: String = objectMapper.writeValueAsString(custumerUpdateDto)
+        //then
+        mockMvc.perform(
+            MockMvcRequestBuilders.patch("$URL?custumerId=$invalidId")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(custumerDto_toString)
+        )
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
             .andDo(MockMvcResultHandlers.print())
     }
 
