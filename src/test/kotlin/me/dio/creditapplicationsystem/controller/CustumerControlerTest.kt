@@ -23,33 +23,55 @@ import java.math.BigDecimal
 @AutoConfigureMockMvc
 @ContextConfiguration
 class CustumerControlerTest {
-    @Autowired private lateinit var custumerRepositorie: CustumerRepositorie
-    @Autowired private lateinit var mockMvc: MockMvc
-    @Autowired private lateinit var objectMapper: ObjectMapper
+    @Autowired
+    private lateinit var custumerRepositorie: CustumerRepositorie
+    @Autowired
+    private lateinit var mockMvc: MockMvc
+    @Autowired
+    private lateinit var objectMapper: ObjectMapper
 
-    companion object{
-        const val URL : String = "/api/custumer"
+    companion object {
+        const val URL: String = "/api/custumer"
     }
-    @BeforeEach fun setup() = custumerRepositorie.deleteAll()
-    @AfterEach fun tearDown () = custumerRepositorie.deleteAll()
+
+    @BeforeEach
+    fun setup() = custumerRepositorie.deleteAll()
+    @AfterEach
+    fun tearDown() = custumerRepositorie.deleteAll()
 
     @Test
-    fun shold_createCustumer_and_return201 (){
+    fun shold_createCustumer_and_return201() {
         //give
         val custumerDTO: CustumerDto = builderCustumerDto()
-        val custumerDto_toString : String = objectMapper.writeValueAsString(custumerDTO)
+        val custumerDto_toString: String = objectMapper.writeValueAsString(custumerDTO)
         //when
-        mockMvc.perform(MockMvcRequestBuilders.post(URL).contentType(MediaType.APPLICATION_JSON)
-            .content(custumerDto_toString))
+        mockMvc.perform(
+            MockMvcRequestBuilders.post(URL).contentType(MediaType.APPLICATION_JSON)
+                .content(custumerDto_toString)
+        )
             .andExpect(MockMvcResultMatchers.status().isCreated)
             .andDo(MockMvcResultHandlers.print())
         //then
     }
 
     @Test
-    fun should_
+    fun should_notSaveCustumer_sameCPF_andRerurn_404() {
+        //given
+        custumerRepositorie.save(builderCustumerDto().toEntity())
+        val custumerDto: CustumerDto = builderCustumerDto()
+        val custumerDto_toString: String = objectMapper.writeValueAsString(custumerDto)
+        //when
+        //then
+        mockMvc.perform(
+            MockMvcRequestBuilders.post(URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(custumerDto_toString)
+        )
+            .andExpect(MockMvcResultMatchers.status().isConflict)
+    }
 
-
+    @Test
+    fun
 
 
     private fun builderCustumerDto(
