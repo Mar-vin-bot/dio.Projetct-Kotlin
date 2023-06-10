@@ -2,6 +2,7 @@ package me.dio.creditapplicationsystem.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import me.dio.creditapplicationsystem.controller.dto.CustumerDto
+import me.dio.creditapplicationsystem.controller.dto.CustumerUpdateDto
 import me.dio.creditapplicationsystem.entities.Custumer
 import me.dio.creditapplicationsystem.repositories.CustumerRepositorie
 import org.junit.jupiter.api.AfterEach
@@ -148,6 +149,23 @@ class CustumerControlerTest {
             .andDo(MockMvcResultHandlers.print())
     }
 
+    @Test
+    fun should_updateCustumer_andReturn200(){
+        //give
+        val custumer: Custumer = custumerRepositorie.save(builderCustumerDto().toEntity())
+        val custumerUpdateDto: CustumerUpdateDto = builderCustumerUpdateDto()
+        val custumerDto_toString: String = objectMapper.writeValueAsString(custumerUpdateDto)
+        //then
+        mockMvc.perform(
+            MockMvcRequestBuilders.patch("$URL?custumerId=${custumer.id}")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(custumerDto_toString)
+        )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andDo(MockMvcResultHandlers.print())
+    }
+
+
 
     private fun builderCustumerDto(
         firstName: String = "João ",
@@ -165,6 +183,20 @@ class CustumerControlerTest {
         email = email,
         income = income,
         password = password,
+        zipCode = zipCode,
+        street = street
+    )
+
+    private fun builderCustumerUpdateDto(
+        firstName: String = "Mario",
+        lastName: String = "World",
+        income: BigDecimal = BigDecimal.valueOf(5000.0),
+        zipCode: String = "45656",
+        street: String = "Rua Peach Cogumelo"
+    ): CustumerUpdateDto = CustumerUpdateDto(
+        firstName = firstName,
+        lastName = lastName,
+        income = income,
         zipCode = zipCode,
         street = street
     )
