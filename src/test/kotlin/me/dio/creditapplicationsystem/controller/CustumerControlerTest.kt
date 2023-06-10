@@ -68,10 +68,33 @@ class CustumerControlerTest {
                 .content(custumerDto_toString)
         )
             .andExpect(MockMvcResultMatchers.status().isConflict)
+            .andDo(MockMvcResultHandlers.print())
+
     }
 
     @Test
-    fun
+    fun should_notSaveCustUmer_withEmptyFirstName_andReturn_400() {
+        //given
+        val customerDto: CustumerDto = builderCustumerDto(firstName = "")
+        val custumerDto_toString: String = objectMapper.writeValueAsString(customerDto)
+        //when
+        //then
+        mockMvc.perform(
+            MockMvcRequestBuilders.post(URL)
+                .content(custumerDto_toString)
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("Bad Request Consult the documentation"))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.timestamp").exists())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(400))
+            .andExpect(
+                MockMvcResultMatchers.jsonPath("$.exception")
+                    .value("class org.springframework.web.bind.MethodArgumentNotValidException")
+            )
+            .andExpect(MockMvcResultMatchers.jsonPath("$.details[*]").isNotEmpty)
+            .andDo(MockMvcResultHandlers.print())
+    }
 
 
     private fun builderCustumerDto(
